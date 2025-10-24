@@ -11,4 +11,5 @@ Trajectory following and control performance are shown below: (find all attempts
 ![PID Results](assets/img/PID/Attempt_9.png)
 
 Simulation video is shown below:
-<video src="assets/vid/PID/pid_sim_vid.mp4" controls width="600"></video>
+https://github.com/user-attachments/assets/015ea21d-ddc7-432a-bffb-9da44d9dd92b
+
