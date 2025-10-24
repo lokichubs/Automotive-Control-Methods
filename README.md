@@ -8,6 +8,6 @@ Implemented a PID controller for trajectory tracking and speed control. Gains we
 ### Results
 Trajectory following and control performance are shown below:
 
-![PID Results](assets/img/PID/Attempt_9_100%.png)
+![PID Results](assets/img/PID/Attempt_9.png)
 
 ![Video demonstration](assets/vid/PID/Zoomed_out_sim.mkv)
