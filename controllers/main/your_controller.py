@@ -43,12 +43,10 @@ class CustomController(BaseController):
         self.m = 1888.6
         self.g = 9.81
 
-        self.v_design = 10.0
-
         # --- Controller ---
         self.delT = 0.032
-        self.longitudinal_pid = PID(Kp=27.58, Ki=0.482, Kd=0.0734, dt=self.delT)
-        self.desired_speed = 10.5
+        self.longitudinal_pid = PID(Kp=16.58, Ki=0.482, Kd=0.0734, dt=self.delT)
+        self.desired_speed = 20
 
         # --- Lateral gain ---
         self.K = self.design_lateral_controller()
@@ -57,7 +55,7 @@ class CustomController(BaseController):
     def design_lateral_controller(self):
         """Calculates the state-feedback gain vector K using discrete pole placement."""
 
-        lr, lf, Ca, Iz, m, v_design, delT = self.lr, self.lf, self.Ca, self.Iz, self.m, self.v_design, self.delT
+        lr, lf, Ca, Iz, m, v_design, delT = self.lr, self.lf, self.Ca, self.Iz, self.m, self.desired_speed, self.delT
 
         A = np.array([
             [0, 1, 0, 0],
@@ -71,12 +69,11 @@ class CustomController(BaseController):
         C = np.eye(4)
         D = np.zeros((4, 1))
         Ad, Bd, _, _, _ = signal.cont2discrete((A, B, C, D), delT, method='zoh')
-
-        continuous_poles = np.array([0, -4.3, -0.6, 0])
+        continuous_poles = np.array([-4, -100, -150, -125])
         desired_poles_z = np.exp(continuous_poles * delT)
 
         try:
-            result = linalg.place_poles(Ad, Bd, desired_poles_z, method='YT')
+            result = signal.place_poles(Ad, Bd, desired_poles_z, method='YT')
             K = result.gain_matrix
             return np.asarray(K).reshape(-1)
         except Exception as e:
@@ -110,8 +107,10 @@ class CustomController(BaseController):
         dpsi_dot = psidot
 
         x_state = np.array([dy, dy_dot, dpsi, dpsi_dot])
+        if abs(dy) < 0.05:
+            raw_u = 0 
 
-        raw_u = -np.dot(self.K, x_state)
+        raw_u = -np.dot(self.K*1.8e-5, x_state)
         delta = clamp(raw_u, -np.pi/6, np.pi/6)
 
         # ---------------- Longitudinal Controller ----------------
@@ -119,5 +118,5 @@ class CustomController(BaseController):
         F = self.longitudinal_pid.update(self.desired_speed, current_speed)
         F = clamp(F, 0, 15736)
 
-        print("Delta (deg):", np.degrees(delta), "Force (N):", F)
+        # print("Delta (deg):", np.degrees(delta), "Force (N):", F)
         return X, Y, xdot, ydot, psi, psidot, F, delta
