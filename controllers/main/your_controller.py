@@ -50,7 +50,7 @@ class CustomController(BaseController):
 
         # --- Lateral gain ---
         self.K = self.design_lateral_controller()
-        print("Lateral gain K:", self.K)
+        # print("Lateral gain K:", self.K)
 
     def design_lateral_controller(self):
         """Calculates the state-feedback gain vector K using discrete pole placement."""
