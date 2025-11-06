@@ -46,7 +46,7 @@ class CustomController(BaseController):
         # --- Controller ---
         self.delT = 0.032
         self.longitudinal_pid = PID(Kp=16.58, Ki=0.482, Kd=0.0734, dt=self.delT)
-        self.desired_speed = 20
+        self.desired_speed = 10
 
         # --- Lateral gain ---
         self.K = self.design_lateral_controller()
@@ -69,7 +69,7 @@ class CustomController(BaseController):
         C = np.eye(4)
         D = np.zeros((4, 1))
         Ad, Bd, _, _, _ = signal.cont2discrete((A, B, C, D), delT, method='zoh')
-        continuous_poles = np.array([-4, -100, -150, -125])
+        continuous_poles = np.array([-4, -80, -90, -100])
         desired_poles_z = np.exp(continuous_poles * delT)
 
         try:
@@ -110,7 +110,7 @@ class CustomController(BaseController):
         if abs(dy) < 0.05:
             raw_u = 0 
 
-        raw_u = -np.dot(self.K*1.8e-5, x_state)
+        raw_u = -np.dot(self.K*3e-5, x_state)
         delta = clamp(raw_u, -np.pi/6, np.pi/6)
 
         # ---------------- Longitudinal Controller ----------------
