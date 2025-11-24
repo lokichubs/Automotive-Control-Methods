@@ -8,3 +8,6 @@ See the implementation and results on the [State_Feedback branch](https://github
 
 ## LQR
 See the impementation and results on [Linear Quadratic Regulator](https://github.com/lokichubs/Automotive-Control-Methods/tree/LQR)
+
+## EKF + SLAM
+See the impementation and results on [Extended Kalman Filter + SLAM](https://github.com/lokichubs/Automotive-Control-Methods/tree/EKF_SLAM)
